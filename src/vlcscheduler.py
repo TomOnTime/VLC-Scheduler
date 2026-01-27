@@ -10,6 +10,11 @@ import version, vlc
 
 import requests
 
+import logging
+
+logging.getLogger("requests").setLevel(logging.WARNING)
+logging.getLogger("urllib3").setLevel(logging.WARNING)
+
 async def watchgod_coro(path, action):
     async for changes in awatch(path, watcher_cls=VLCSchedulerSourceWatcher, debounce=3600):
         logger.info('Changes detected in %s.' % path)
