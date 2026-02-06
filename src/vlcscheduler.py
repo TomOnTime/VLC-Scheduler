@@ -56,6 +56,7 @@ async def player_coro(player, rebuild_events_queue, extra_items_queue, ping_urls
                 continue
             
             play_duration = item.source.item_play_duration
+            logger.info('DEBUG: play_duration = %i' % (play_duration, ))
             
             if item.path != current_item_path:
                 # VLC occasionally chokes on playlists and keeps playing what it was playing
@@ -73,8 +74,15 @@ async def player_coro(player, rebuild_events_queue, extra_items_queue, ping_urls
                 # If the length can't be determined, default to abs(play_duration).
                 await asyncio.sleep(0.25)
                 actual_duration = player.status().get('length', 0)
+                #logger.info('DEBUG: player.status=%s' % ( player.status() , ))
+                logger.info('DEBUG: player.status.length=%i' % (actual_duration, ))
                 if actual_duration <= 0:
-                    actual_duration = config.IMAGE_PLAY_DURATION
+                    await asyncio.sleep(0.25)
+                    actual_duration = player.status().get('length', 0)
+                    # logger.info('DEBUG: TWO player.status=%s' % ( player.status() , ))
+                    logger.info('DEBUG: TWO player.status.length=%i' % (actual_duration, ))
+                    if actual_duration <= 0:
+                        actual_duration = config.IMAGE_PLAY_DURATION
                 play_duration = min(actual_duration, -play_duration)
 
             if play_duration == 0:

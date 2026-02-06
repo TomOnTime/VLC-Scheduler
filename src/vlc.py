@@ -67,6 +67,8 @@ class VLCLauncher:
         else:
             kwargs['stderr'] = asyncio.subprocess.DEVNULL
             kwargs['stdout'] = asyncio.subprocess.DEVNULL
+
+        logging.info('Launching VLC with command: %s %s' % (command, kwargs) )
         
         self.process = await asyncio.create_subprocess_exec(*command, **kwargs)
         time.sleep(1)
